@@ -89,4 +89,26 @@ public class CustomerController {
         }
         return null;
     }
+
+    /**
+     * Metodo para actualizar algun dato en especifico y no todos
+     * @param customer
+     * @return
+     */
+    @PatchMapping("/clientes")
+    public Customer patchCliente(@RequestBody Customer customer){
+        for(Customer cliente : customers){
+            if(cliente.getID() == customer.getID()){
+                if(customer.getName() != null){
+                    cliente.setName(customer.getName());
+                }if(customer.getUserName() != null){
+                    cliente.setUserName(customer.getUserName());
+                }if(customer.getPassword() != null){
+                    cliente.setPassword(customer.getPassword());
+                }
+                return cliente;
+            }
+        }
+        return null;
+    }
 }
