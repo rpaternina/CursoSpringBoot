@@ -9,7 +9,7 @@ public class GreetingRestController {
 
     @GetMapping("/saludo/{name}")
     public String greetin(@PathVariable String name){
-        return "Hola " + name;
+        return "Hola " + name ;
     }
 
 }

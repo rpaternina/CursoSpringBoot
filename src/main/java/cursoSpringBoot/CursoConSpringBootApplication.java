@@ -10,4 +10,5 @@ public class CursoConSpringBootApplication {
 		SpringApplication.run(CursoConSpringBootApplication.class, args);
 	}
 
+
 }
