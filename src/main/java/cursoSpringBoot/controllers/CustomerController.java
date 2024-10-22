@@ -73,4 +73,20 @@ public class CustomerController {
         }
         return null;
     }
+
+    /**
+     * Metodo eliminar cliente por ID
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/clientes/{id}")
+    public Customer deletCliente(@PathVariable int id){
+        for (Customer clientes : customers){
+            if (clientes.getID() == id){
+                customers.remove(clientes);
+                return clientes;
+            }
+        }
+        return null;
+    }
 }
