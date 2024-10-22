@@ -52,4 +52,25 @@ public class CustomerController {
         customers.add(customer);
         return customer;
     }
+
+
+    /**
+     * Metodo para actualizar cliente, se obtiene por ID
+     * @param customer
+     * @return
+     */
+    @PutMapping("/clientes")
+    public Customer putCliente(@RequestBody Customer customer){
+        for(Customer clientes : customers){
+            if(clientes.getID() == customer.getID()){
+                clientes.setID(customer.getID());
+                clientes.setName(customer.getName());
+                clientes.setUserName(customer.getUserName());
+                clientes.setPassword(customer.getPassword());
+
+                return clientes;
+            }
+        }
+        return null;
+    }
 }
