@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +64,25 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity <?> postCliente(@RequestBody Customer customer) {
         customers.add(customer);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Creado con exito: " + customer);
+
+        // Sirve para crear una URI del cliente creado, Osea nos da una ubicacion en URL de donde se creo
+        URI ubicacion = ServletUriComponentsBuilder
+                // Obtenemos la URI base
+                .fromCurrentRequest()
+                // Coloco la variable que me permite consumir el recurso por parametro
+                .path("/{id}")
+                // Toma el valor y lo inserta en la ruta que pase ne path
+                .buildAndExpand(customer.getID())
+                // Convierte la ruta construida en una URI resultante
+                .toUri();
+
+
+        /** Retorno el codigo HTTP correspondiente con la URI sin mostrar info
+         * return ResponseEntity.created(ubicacion).build();
+         */
+
+        //Retorna el codigo HTTP correspondiente con la URI con toda la info
+        return ResponseEntity.created(ubicacion).body(customer);
     }
 
     /**
@@ -81,10 +101,12 @@ public class CustomerController {
                 clientes.setUserName(customer.getUserName());
                 clientes.setPassword(customer.getPassword());
 
-                return ResponseEntity.ok("Exitoso");
+                // Al actualizar no devuelve nada, solo un 204 exitoso
+                return ResponseEntity.noContent().build();
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error al actualizar" + customer);
+        // Retorna un error de tipo 404
+        return ResponseEntity.notFound().build();
     }
 
     /**
