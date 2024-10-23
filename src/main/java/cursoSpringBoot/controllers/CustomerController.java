@@ -1,6 +1,9 @@
 package cursoSpringBoot.controllers;
 
 import cursoSpringBoot.domain.Customer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -8,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@RequestMapping("/clientes")
 public class CustomerController {
 
     private List<Customer> customers = new ArrayList<>(Arrays.asList(
@@ -20,26 +24,32 @@ public class CustomerController {
 
     /**
      * Metodo para obtener todos los clientes
+     * ResponseEntity nos sirve para poder manejar los errores HTTP
      * @return
+     *
      */
-    @GetMapping("/clientes")
-    public List<Customer> getCustomers() {
-        return customers;
+    @GetMapping
+    public ResponseEntity <List<Customer>> getCustomers() {
+        return ResponseEntity.ok(customers);
     }
 
     /**
      * Metodo para obtener cliente por ID
-     * @param ID
+     * ResponseEntity<?> sirve para poder retornar otro valor que no sea el asignado en la clase
+     * @param id
      * @return
+     *
      */
-    @GetMapping("/clientes/{ID}")
-    public Customer getCliente(@PathVariable int ID) {
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    //@GetMapping("/{ID}")
+    public ResponseEntity <?> getCliente(@PathVariable int id) {
         for (Customer ides : customers) {
-            if (ides.getID() == ID) {
-                return ides;
+            if (ides.getID() == id) {
+                return ResponseEntity.ok(ides);
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User no encontrado con el id: " + id);
     }
 
     /**
@@ -47,19 +57,22 @@ public class CustomerController {
      * @param customer
      * @return
      */
-    @PostMapping("/clientes")
-    public Customer postCliente(@RequestBody Customer customer) {
-        customers.add(customer);
-        return customer;
-    }
 
+    //@PostMapping
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity <?> postCliente(@RequestBody Customer customer) {
+        customers.add(customer);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Creado con exito: " + customer);
+    }
 
     /**
      * Metodo para actualizar cliente, se obtiene por ID
      * @param customer
      * @return
      */
-    @PutMapping("/clientes")
+
+    //@PutMapping
+    @RequestMapping(method = RequestMethod.PUT)
     public Customer putCliente(@RequestBody Customer customer){
         for(Customer clientes : customers){
             if(clientes.getID() == customer.getID()){
@@ -79,7 +92,7 @@ public class CustomerController {
      * @param id
      * @return
      */
-    @DeleteMapping("/clientes/{id}")
+    @DeleteMapping("/{id}")
     public Customer deletCliente(@PathVariable int id){
         for (Customer clientes : customers){
             if (clientes.getID() == id){
@@ -95,7 +108,7 @@ public class CustomerController {
      * @param customer
      * @return
      */
-    @PatchMapping("/clientes")
+    @PatchMapping
     public Customer patchCliente(@RequestBody Customer customer){
         for(Customer cliente : customers){
             if(cliente.getID() == customer.getID()){
