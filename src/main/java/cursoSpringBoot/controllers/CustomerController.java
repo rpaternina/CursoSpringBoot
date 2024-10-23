@@ -73,7 +73,7 @@ public class CustomerController {
 
     //@PutMapping
     @RequestMapping(method = RequestMethod.PUT)
-    public Customer putCliente(@RequestBody Customer customer){
+    public ResponseEntity <?> putCliente(@RequestBody Customer customer){
         for(Customer clientes : customers){
             if(clientes.getID() == customer.getID()){
                 clientes.setID(customer.getID());
@@ -81,10 +81,10 @@ public class CustomerController {
                 clientes.setUserName(customer.getUserName());
                 clientes.setPassword(customer.getPassword());
 
-                return clientes;
+                return ResponseEntity.ok("Exitoso");
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error al actualizar" + customer);
     }
 
     /**
@@ -93,14 +93,14 @@ public class CustomerController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public Customer deletCliente(@PathVariable int id){
+    public ResponseEntity<?> deletCliente(@PathVariable int id){
         for (Customer clientes : customers){
             if (clientes.getID() == id){
                 customers.remove(clientes);
-                return clientes;
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Eliminado con exito " + clientes.getName());
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se pudo eliminar " + id);
     }
 
     /**
